@@ -14,6 +14,10 @@ option (EFSW_INSTALL "Add efsw install targets" ON)
 
 add_library(efsw)
 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/externals/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+
+find_package(Sanitizers)
+
 target_sources(efsw PRIVATE
 src/efsw/Debug.cpp
 	src/efsw/DirectorySnapshot.cpp
@@ -33,6 +37,8 @@ src/efsw/Debug.cpp
 	src/efsw/Watcher.cpp
 	src/efsw/WatcherGeneric.cpp
 )
+
+add_sanitizers(efsw)
 
 target_include_directories(efsw
 	PRIVATE src/
@@ -158,5 +164,6 @@ endif()
 if (BUILD_TEST_APP)
 	add_executable(efsw-test src/test/efsw-test.cpp)
 	target_link_libraries(efsw-test efsw)
+	add_sanitizers(efsw-test)
 endif()
 
